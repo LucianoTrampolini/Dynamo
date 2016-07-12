@@ -1,0 +1,47 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Dynamo.BL.Base;
+using Dynamo.Common;
+using Dynamo.Model;
+
+namespace Dynamo.BL.BusinessRules.Band
+{
+    class BijwerkenPlanningEindDatumContract : BusinessRuleBase<Model.Band>
+    {
+        private PlanningRepository _planningRepository = null;
+
+        public BijwerkenPlanningEindDatumContract(DynamoContext context)
+            :base(context) 
+        {
+            _planningRepository = new PlanningRepository(context);
+        }
+
+        public override bool Execute(Model.Band entity)
+        {
+            foreach (var contract in entity.Contracten.Where(c => c.EindeContract.HasValue && c.EindeContract.Value > DateTime.Today))
+            {
+                var eindDatum = contract.EindeContract;
+                var bandId = entity.Id;
+                var planning = _planningRepository.Load(x => x.Verwijderd == false && x.Beschikbaar && x.Datum > eindDatum && x.Boekingen.Any(b => b.BandId == bandId && b.DatumAfgezegd == null));
+                if (planning != null)
+                {
+                    foreach (var item in planning)
+                    {
+                        if (item.Datum.DagVanDeWeek() == contract.Oefendag)
+                        {
+                            var boeking = item.Boekingen.FirstOrDefault(x => x.BandId == bandId && x.DatumAfgezegd == null);
+
+                            boeking.DatumAfgezegd = DateTime.Today;
+                            boeking.Opmerking += "Einde contract. ";
+                            item.Beschikbaar = true;
+                        }
+                        _planningRepository.Save(item);
+                    }
+                }
+            }
+            return true;
+        }
+    }
+}

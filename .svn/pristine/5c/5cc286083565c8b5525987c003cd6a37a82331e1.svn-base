@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Dynamo.Model.Base;
+
+namespace Dynamo.Model
+{
+    public class Bericht : ModelBase
+    {
+        public override string GetKorteOmschrijving()
+        {
+            return string.Format("Titel = {0}, BerichtType = {1}", Titel, BerichtTypeId);
+        }
+
+        public Bericht()
+        {
+            Beheerders = new List<Beheerder>();
+        }
+
+        public virtual ICollection<Beheerder> Beheerders { get; set; }
+        public DateTime Datum { get; set; }
+        public virtual BerichtType BerichtType { get; set; }
+        public int BerichtTypeId { get; set; }
+        public string Titel { get; set; }
+        public string Tekst { get; set; }
+    }
+}

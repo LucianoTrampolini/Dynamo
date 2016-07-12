@@ -1,0 +1,27 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Dynamo.BL.Base;
+using Dynamo.Model;
+
+namespace Dynamo.BL.BusinessRules.Beheerder
+{
+    class KanAanmelden :BusinessRuleBase<Model.Vergoeding>
+    {
+        private VergoedingRepository _vergoedingRepository = null;
+
+        public KanAanmelden(DynamoContext context)
+            :base(context) 
+        {
+            _vergoedingRepository = new VergoedingRepository(context);
+        }
+
+        public override bool Execute(Vergoeding entity)
+        {
+            //TODO constante voor taak 'beheer'
+            var vergoeding = _vergoedingRepository.Load(verg => verg.Datum == entity.Datum && verg.DagdeelId == entity.DagdeelId && verg.Verwijderd==false);
+            return vergoeding.Count(verg=> verg.TaakId ==1 ||(verg.BeheerderId== entity.Beheerder.Id)) == 0;
+        }
+    }
+}

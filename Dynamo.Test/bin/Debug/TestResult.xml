@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="C:\dev\Dynamo\Dynamo.Test\bin\Debug\Dynamo.Test.dll" total="23" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2012-09-27" time="21:15:27">
+  <environment nunit-version="2.5.10.11092" clr-version="2.0.50727.5456" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="C:\Users\Rick\AppData\Local\Apps\OpenCover" machine-name="RICK-PC" user="Rick" user-domain="Rick-PC" />
+  <culture-info current-culture="en-US" current-uiculture="en-US" />
+  <test-suite type="Assembly" name="C:\dev\Dynamo\Dynamo.Test\bin\Debug\Dynamo.Test.dll" executed="True" result="Success" success="True" time="2.762" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="Dynamo" executed="True" result="Success" success="True" time="2.756" asserts="0">
+        <results>
+          <test-suite type="Namespace" name="Test" executed="True" result="Success" success="True" time="2.755" asserts="0">
+            <results>
+              <test-suite type="Namespace" name="BL" executed="True" result="Success" success="True" time="1.809" asserts="0">
+                <results>
+                  <test-suite type="Namespace" name="BusinessRules" executed="True" result="Success" success="True" time="1.782" asserts="0">
+                    <results>
+                      <test-suite type="Namespace" name="Band" executed="True" result="Success" success="True" time="1.762" asserts="0">
+                        <results>
+                          <test-suite type="TestFixture" name="BijwerkenBetalingenContractTest" executed="True" result="Success" success="True" time="1.578" asserts="0">
+                            <results>
+                              <test-case name="Dynamo.Test.BL.BusinessRules.Band.BijwerkenBetalingenContractTest.BijwerkenBetalingenContract_Test" executed="True" result="Success" success="True" time="1.563" asserts="3" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="TestFixture" name="BijwerkenPlanningContractTest" executed="True" result="Success" success="True" time="0.109" asserts="0">
+                            <results>
+                              <test-case name="Dynamo.Test.BL.BusinessRules.Band.BijwerkenPlanningContractTest.BijwerkenPlanningContractTest_Succes" executed="True" result="Success" success="True" time="0.106" asserts="5" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="TestFixture" name="BijwerkenPlanningEindDatumContractTest" executed="True" result="Success" success="True" time="0.024" asserts="0">
+                            <results>
+                              <test-case name="Dynamo.Test.BL.BusinessRules.Band.BijwerkenPlanningEindDatumContractTest.BijwerkenPlanningEindDatumContractTest_Succes" executed="True" result="Success" success="True" time="0.023" asserts="2" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="TestFixture" name="HandleNaamChangedTest" executed="True" result="Success" success="True" time="0.026" asserts="0">
+                            <results>
+                              <test-case name="Dynamo.Test.BL.BusinessRules.Band.HandleNaamChangedTest.HandleNaamChangedTest_Succes" executed="True" result="Success" success="True" time="0.024" asserts="2" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                      <test-suite type="Namespace" name="Beheerder" executed="True" result="Success" success="True" time="0.014" asserts="0">
+                        <results>
+                          <test-suite type="TestFixture" name="KanAanmeldenTest" executed="True" result="Success" success="True" time="0.014" asserts="0">
+                            <results>
+                              <test-case name="Dynamo.Test.BL.BusinessRules.Beheerder.KanAanmeldenTest.KanAanmeldenTest_NoSucces" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                              <test-case name="Dynamo.Test.BL.BusinessRules.Beheerder.KanAanmeldenTest.KanAanmeldenTest_Succes" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite type="Namespace" name="Repository" executed="True" result="Success" success="True" time="0.017" asserts="0">
+                    <results>
+                      <test-suite type="TestFixture" name="BeheerderRepositoryTest" executed="True" result="Success" success="True" time="0.017" asserts="0">
+                        <results>
+                          <test-case name="Dynamo.Test.BL.Repository.BeheerderRepositoryTest.Test1" executed="True" result="Success" success="True" time="0.015" asserts="7" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite type="Namespace" name="Boekingssysteem" executed="True" result="Success" success="True" time="0.742" asserts="0">
+                <results>
+                  <test-suite type="Namespace" name="ViewModel" executed="True" result="Success" success="True" time="0.742" asserts="0">
+                    <results>
+                      <test-suite type="TestFixture" name="HoofdschermViewModelTests" executed="True" result="Success" success="True" time="0.741" asserts="0">
+                        <results>
+                          <test-case name="Dynamo.Test.Boekingssysteem.ViewModel.HoofdschermViewModelTests.HoofdSchermViewModelTest" executed="True" result="Success" success="True" time="0.739" asserts="4" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+              <test-suite type="Namespace" name="Common" executed="True" result="Success" success="True" time="0.185" asserts="0">
+                <results>
+                  <test-suite type="TestFixture" name="CommonMethodsTests" executed="True" result="Success" success="True" time="0.108" asserts="0">
+                    <results>
+                      <test-case name="Dynamo.Test.Common.CommonMethodsTests.DynamoDatum2DatumTest_NoSucces" executed="True" result="Success" success="True" time="0.080" asserts="1" />
+                      <test-case name="Dynamo.Test.Common.CommonMethodsTests.DynamoDatum2DatumTest_Succes" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                      <test-case name="Dynamo.Test.Common.CommonMethodsTests.GetBedragTest_NoSucces" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                      <test-case name="Dynamo.Test.Common.CommonMethodsTests.GetBedragTest_Succes" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                      <test-case name="Dynamo.Test.Common.CommonMethodsTests.GetOefendagenListTest_Succes" executed="True" result="Success" success="True" time="0.006" asserts="7" />
+                      <test-case name="Dynamo.Test.Common.CommonMethodsTests.IsDynamoDatumTest_NoSucces" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                      <test-case name="Dynamo.Test.Common.CommonMethodsTests.IsDynamoDatumTest_Succes" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                  <test-suite type="TestFixture" name="DateExtensionsTests" executed="True" result="Success" success="True" time="0.060" asserts="0">
+                    <results>
+                      <test-case name="Dynamo.Test.Common.DateExtensionsTests.DagVanDeWeekTest_Succes" executed="True" result="Success" success="True" time="0.000" asserts="8" />
+                      <test-case name="Dynamo.Test.Common.DateExtensionsTests.DagVanDeWeekVoluitTest_Succes" executed="True" result="Success" success="True" time="0.001" asserts="8" />
+                      <test-case name="Dynamo.Test.Common.DateExtensionsTests.GetDynamoDatumTest_Succes" executed="True" result="Success" success="True" time="0.001" asserts="2" />
+                      <test-case name="Dynamo.Test.Common.DateExtensionsTests.GetDynamoDatumTijdTest_Succes" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                      <test-case name="Dynamo.Test.Common.DateExtensionsTests.GetIsoWeekNrTest_Succes" executed="True" result="Success" success="True" time="0.002" asserts="4" />
+                      <test-case name="Dynamo.Test.Common.DateExtensionsTests.MaandVoluitTest_Succes" executed="True" result="Success" success="True" time="0.002" asserts="12" />
+                    </results>
+                  </test-suite>
+                  <test-suite type="TestFixture" name="DecimalExtensionsTests" executed="True" result="Success" success="True" time="0.007" asserts="0">
+                    <results>
+                      <test-case name="Dynamo.Test.Common.DecimalExtensionsTests.GetDynamoBedragTest_NoSucces" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+                      <test-case name="Dynamo.Test.Common.DecimalExtensionsTests.GetDynamoBedragTest_Succes" executed="True" result="Success" success="True" time="0.000" asserts="1" />
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

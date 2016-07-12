@@ -1,0 +1,102 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Data.Entity;
+using System.Data.Objects;
+using Dynamo.Common.Constants;
+
+namespace Dynamo.Model.Context
+{
+    public class FakeDynamoContext : IDynamoContext
+    {
+        public IDbSet<OpgetredenFout> OpgetredenFouten { get; set; }
+        public IDbSet<Beheerder> Beheerders { get; set; }
+        public IDbSet<Band> Bands { get; set; }
+
+        public IDbSet<ContactPersoon> ContactPersoons { get; set; }
+        public IDbSet<BandType> BandTypes { get; set; }
+        public IDbSet<PlanningsDag> PlanningsDagen { get; set; }
+        public IDbSet<Planning> Planning { get; set; }
+        public IDbSet<Boeking> Boekingen { get; set; }
+        public IDbSet<Oefenruimte> Oefenruimtes { get; set; }
+        public IDbSet<Tarief> Tarieven { get; set; }
+        public IDbSet<Dagdeel> Dagdelen { get; set; }
+        public IDbSet<Betaling> Betalingen { get; set; }
+        public IDbSet<Vergoeding> Vergoedingen { get; set; }
+        public IDbSet<Taak> Taken { get; set; }
+        public IDbSet<Gesloten> Gesloten { get; set; }
+        public IDbSet<Contract> Contracten { get; set; }
+        public IDbSet<BerichtType> BerichtTypes { get; set; }
+        public IDbSet<Bericht> Berichten { get; set; }
+        public IDbSet<ChangeLog> ChangeLog { get; set; }
+        public IDbSet<Instelling> Instellingen { get; set; }
+
+        public FakeDynamoContext()
+        {
+            OpgetredenFouten = new FakeDbSet<OpgetredenFout>();
+            Beheerders = new FakeDbSet<Beheerder>();
+            Bands= new FakeDbSet<Band>();
+            ContactPersoons = new FakeDbSet<ContactPersoon>();
+            BandTypes = new FakeDbSet<BandType>();
+            PlanningsDagen= new FakeDbSet<PlanningsDag>();
+            Planning = new FakeDbSet<Planning>();
+            Boekingen = new FakeDbSet<Boeking>();
+            Oefenruimtes = new FakeDbSet<Oefenruimte>();
+            Tarieven = new FakeDbSet<Tarief>();
+            Dagdelen= new FakeDbSet<Dagdeel>();
+            Betalingen = new FakeDbSet<Betaling>();
+            Vergoedingen = new FakeDbSet<Vergoeding>();
+            Taken = new FakeDbSet<Taak>();
+            Gesloten = new FakeDbSet<Gesloten>();
+            Contracten = new FakeDbSet<Contract>();
+            Berichten = new FakeDbSet<Bericht>();
+            BerichtTypes = new FakeDbSet<BerichtType>();
+            ChangeLog = new FakeDbSet<ChangeLog>();
+            Instellingen = new FakeDbSet<Instelling>();
+            
+        }
+
+
+        public System.Data.Entity.Infrastructure.DbEntityEntry Entry(object entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int SaveChanges()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+        }
+
+        private static IDynamoContext _currentContext = null;
+
+        public static IDynamoContext GetInstance()
+        {
+            if (_currentContext == null)
+            {
+                _currentContext = new FakeDynamoContext();
+            }
+
+            return _currentContext;
+        }
+
+        public static void SetBasisgegevens()
+        {
+            GetInstance().Oefenruimtes.Add(new Oefenruimte { Id = 1, Naam = "Oefenruimte 1" });
+            GetInstance().Oefenruimtes.Add(new Oefenruimte { Id = 2, Naam = "Oefenruimte 2" });
+            GetInstance().Oefenruimtes.Add(new Oefenruimte { Id = 3, Naam = "Oefenruimte 3" });
+
+            GetInstance().Dagdelen.Add(new Dagdeel { Id = 1, Omschrijving = "Ochtend" });
+            GetInstance().Dagdelen.Add(new Dagdeel { Id = 2, Omschrijving = "Middag" });
+            GetInstance().Dagdelen.Add(new Dagdeel { Id = 3, Omschrijving = "Avond" });
+
+            var beheerder = new Beheerder { Id = 1, Naam = "Herman" };
+            GetInstance().Beheerders.Add(beheerder);
+            GetInstance().Vergoedingen.Add(new Vergoeding { Id = 1, BeheerderId = 1, Beheerder = beheerder, TaakId = TaakConsts.Beheer });
+        }
+    }
+}

@@ -1,0 +1,11 @@
+C:\dev\Dynamo\Dynamo.Notifier\obj\Release\ResolveAssemblyReference.cache
+C:\dev\Dynamo\Dynamo.Notifier\bin\Release\Dynamo.Notifier.dll
+C:\dev\Dynamo\Dynamo.Notifier\bin\Release\Dynamo.Notifier.pdb
+C:\dev\Dynamo\Dynamo.Notifier\bin\Release\Dynamo.BL.dll
+C:\dev\Dynamo\Dynamo.Notifier\bin\Release\Dynamo.Model.dll
+C:\dev\Dynamo\Dynamo.Notifier\bin\Release\Dynamo.Common.dll
+C:\dev\Dynamo\Dynamo.Notifier\bin\Release\Dynamo.BL.pdb
+C:\dev\Dynamo\Dynamo.Notifier\bin\Release\Dynamo.Model.pdb
+C:\dev\Dynamo\Dynamo.Notifier\bin\Release\Dynamo.Common.pdb
+C:\dev\Dynamo\Dynamo.Notifier\obj\Release\Dynamo.Notifier.dll
+C:\dev\Dynamo\Dynamo.Notifier\obj\Release\Dynamo.Notifier.pdb

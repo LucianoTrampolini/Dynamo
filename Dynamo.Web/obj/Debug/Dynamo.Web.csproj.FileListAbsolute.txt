@@ -1,0 +1,15 @@
+C:\dev\Dynamo\Dynamo.Web\obj\Debug\Dynamo.Web.csprojResolveAssemblyReference.cache
+C:\dev\Dynamo\Dynamo.Web\bin\Debug\Dynamo.Web.dll
+C:\dev\Dynamo\Dynamo.Web\bin\Debug\Dynamo.Web.pdb
+C:\dev\Dynamo\Dynamo.Web\bin\Debug\Dynamo.BL.dll
+C:\dev\Dynamo\Dynamo.Web\bin\Debug\Dynamo.Common.dll
+C:\dev\Dynamo\Dynamo.Web\bin\Debug\Dynamo.Model.dll
+C:\dev\Dynamo\Dynamo.Web\bin\Debug\Newtonsoft.Json.dll
+C:\dev\Dynamo\Dynamo.Web\bin\Debug\System.Net.FtpClient.dll
+C:\dev\Dynamo\Dynamo.Web\bin\Debug\Dynamo.BL.pdb
+C:\dev\Dynamo\Dynamo.Web\bin\Debug\Dynamo.Common.pdb
+C:\dev\Dynamo\Dynamo.Web\bin\Debug\Dynamo.Model.pdb
+C:\dev\Dynamo\Dynamo.Web\bin\Debug\Newtonsoft.Json.xml
+C:\dev\Dynamo\Dynamo.Web\bin\Debug\System.Net.FtpClient.xml
+C:\dev\Dynamo\Dynamo.Web\obj\Debug\Dynamo.Web.dll
+C:\dev\Dynamo\Dynamo.Web\obj\Debug\Dynamo.Web.pdb

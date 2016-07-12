@@ -1,0 +1,8 @@
+C:\dev\Dynamo\Dynamo.Common\bin\Release\Dynamo.Common.dll
+C:\dev\Dynamo\Dynamo.Common\bin\Release\Dynamo.Common.pdb
+C:\dev\Dynamo\Dynamo.Common\obj\Release\ResolveAssemblyReference.cache
+C:\dev\Dynamo\Dynamo.Common\obj\Release\Dynamo.Common.Properties.StringResources.resources
+C:\dev\Dynamo\Dynamo.Common\obj\Release\GenerateResource.read.1.tlog
+C:\dev\Dynamo\Dynamo.Common\obj\Release\GenerateResource.write.1.tlog
+C:\dev\Dynamo\Dynamo.Common\obj\Release\Dynamo.Common.dll
+C:\dev\Dynamo\Dynamo.Common\obj\Release\Dynamo.Common.pdb

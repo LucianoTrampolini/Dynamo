@@ -1,0 +1,83 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Dynamo.Boekingssysteem.ViewModel.Base;
+using Dynamo.Common;
+using Dynamo.BoekingsSysteem.Base;
+using Dynamo.Common.Properties;
+using Dynamo.BoekingsSysteem;
+using Dynamo.BL;
+
+namespace Dynamo.Boekingssysteem.ViewModel.Band
+{
+    public class BeeindigContractViewModel :BandViewModel
+    {
+        private Model.Contract _currentContract;
+        public event EventHandler OnBeeindigContract;
+
+        private Model.Contract CurrentContract
+        {
+            get
+            {
+                if (_currentContract == null && (GetEntity().Contracten == null || GetEntity().Contracten.Count() == 0))
+                {
+                    _currentContract = new Model.Contract();
+                    _entity.Contracten.Add(_currentContract);
+                }
+                else
+                {
+                    _currentContract = GetEntity().Contracten.Last();
+                }
+                return _currentContract;
+            }
+        }
+
+        public string EindeContract
+        {
+            get { return CurrentContract.EindeContract.HasValue ? CurrentContract.EindeContract.Value.GetDynamoDatum() : string.Empty; }
+            set
+            {
+                if (CurrentContract.EindeContract.HasValue == false || value != CurrentContract.EindeContract.Value.GetDynamoDatum())
+                {
+                    if (CommonMethods.IsDynamoDatum(value))
+                    {
+                        CurrentContract.EindeContract = CommonMethods.DynamoDatum2Datum(value);
+                        OnPropertyChanged("EindeContract");
+                    }
+                }
+            }
+        }
+
+        public BeeindigContractViewModel(Model.Band band)
+            : base(band)
+        { }
+
+        protected override List<CommandViewModel> CreateCommands()
+        {
+            return new List<CommandViewModel>
+            {
+                new CommandViewModel(
+                    StringResources.ButtonOpslaan,
+                    new RelayCommand(param => this.Opslaan(), param=>this.KanOpslaan())),
+                new CommandViewModel(
+                    StringResources.ButtonAnnuleren,
+                    CloseCommand)
+            };
+        }
+
+        private bool KanOpslaan()
+        {
+            return CurrentContract.EindeContract.HasValue;
+        }
+
+        private void Opslaan()
+        {
+            if (OnBeeindigContract != null)
+            {
+                OnBeeindigContract(this, EventArgs.Empty);
+            }
+            CloseCommand.Execute(null);
+        }
+    }
+}

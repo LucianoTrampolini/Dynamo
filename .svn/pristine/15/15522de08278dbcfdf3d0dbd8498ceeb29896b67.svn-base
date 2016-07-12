@@ -1,0 +1,115 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Dynamo.BoekingsSysteem.Base;
+using System.Collections.ObjectModel;
+using Dynamo.BoekingsSysteem;
+using System.Windows;
+using System.Windows.Input;
+using Dynamo.Boekingssysteem.ViewModel.Base;
+using Dynamo.Common.Properties;
+
+namespace Dynamo.Boekingssysteem.ViewModel
+{
+    public class ModalDialogViewModel : SubItemViewModel<Model.Beheerder>
+    {
+
+        
+        #region Members
+
+        private bool _dialogShown;
+        private string _dialogMessage;
+        
+        #endregion
+
+        #region Constructors and initialization
+
+        public ModalDialogViewModel(string message, string header)
+        {
+            Init(message, header);
+        }
+
+        private void Init(string message, string header)
+        {
+            if (message == null)
+                throw new ArgumentNullException("message");
+
+            //if (buttons.Length != commands.Length)
+            //    throw new ArgumentException("Same number of buttons and commands expected");
+
+            this.DialogMessage = message;
+            this.DisplayName = header;
+
+            //List<CommandViewModel> commandModels = new List<CommandViewModel>();
+
+            //// create commands viewmodel for buttons in the view
+            //for (int i = 0; i < buttons.Length; i++)
+            //{
+            //    commandModels.Add(new CommandViewModel(buttons[i], commands[i]));
+            //}
+
+            this.RequestClose += new EventHandler(ModalDialogViewModel_RequestClose);
+
+        }
+
+        void ModalDialogViewModel_RequestClose(object sender, EventArgs e)
+        {
+            Hide();
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Checks if the dialog is visible, use Show() Hide() methods to set this
+        /// </summary>
+        public bool DialogShown
+        {
+            get
+            {
+                return _dialogShown;
+            }
+            private set
+            {
+                _dialogShown = value;
+                base.OnPropertyChanged("DialogShown");
+            }
+        }
+
+        /// <summary>
+        /// The message shown in the dialog
+        /// </summary>
+        public string DialogMessage
+        {
+            get
+            {
+                return _dialogMessage;
+            }
+            private set
+            {
+                _dialogMessage = value;
+                base.OnPropertyChanged("DialogMessage");
+            }
+        }
+
+        #endregion
+
+        #region Methods
+
+        public void Show()
+        {
+            this.DialogShown = true;
+        }
+
+        public void Hide()
+        {
+            this._dialogMessage = String.Empty;
+            this.DialogShown = false;
+        }
+
+        #endregion
+
+    }
+}

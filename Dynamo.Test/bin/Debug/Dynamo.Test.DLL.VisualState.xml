@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="true">
+  <TopNode>[0-1033]C:\dev\Dynamo\Dynamo.Test\bin\Debug\Dynamo.Test.dll</TopNode>
+  <SelectedNode>[0-1036]Dynamo.Test.Common</SelectedNode>
+  <ExcludeCategories>false</ExcludeCategories>
+  <Nodes>
+    <Node UniqueName="[0-1033]C:\dev\Dynamo\Dynamo.Test\bin\Debug\Dynamo.Test.dll" Expanded="true" />
+    <Node UniqueName="[0-1034]Dynamo" Expanded="true" Checked="true" />
+    <Node UniqueName="[0-1035]Dynamo.Test" Expanded="true" Checked="true" />
+    <Node UniqueName="[0-1037]Dynamo.Test.BL" Checked="true" />
+    <Node UniqueName="[0-1020]Dynamo.Test.BL.BusinessRules.Band.BijwerkenBetalingenContractTest" Expanded="true" />
+    <Node UniqueName="[0-1031]Dynamo.Test.BL.BusinessRules.Band.BijwerkenPlanningContractTest" Expanded="true" />
+    <Node UniqueName="[0-1008]Dynamo.Test.BL.BusinessRules.Band.BijwerkenPlanningEindDatumContractTest" Expanded="true" />
+    <Node UniqueName="[0-1040]Dynamo.Test.BL.BusinessRules.Beheerder" Expanded="true" />
+    <Node UniqueName="[0-1043]Dynamo.Test.BL.Repository" Expanded="true" />
+    <Node UniqueName="[0-1041]Dynamo.Test.Boekingssysteem" Expanded="true" Checked="true" />
+    <Node UniqueName="[0-1042]Dynamo.Test.Boekingssysteem.ViewModel" Expanded="true" Checked="true" />
+    <Node UniqueName="[0-1013]Dynamo.Test.Boekingssysteem.ViewModel.HoofdschermViewModelTests" Checked="true" />
+    <Node UniqueName="[0-1036]Dynamo.Test.Common" Expanded="true" Checked="true" />
+  </Nodes>
+</VisualState>

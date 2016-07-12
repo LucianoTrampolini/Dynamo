@@ -1,0 +1,9 @@
+C:\dev\Dynamo\Dynamo.BL\obj\Debug\Dynamo.BL.csprojResolveAssemblyReference.cache
+C:\dev\Dynamo\Dynamo.BL\bin\Debug\Dynamo.BL.dll
+C:\dev\Dynamo\Dynamo.BL\bin\Debug\Dynamo.BL.pdb
+C:\dev\Dynamo\Dynamo.BL\bin\Debug\Dynamo.Common.dll
+C:\dev\Dynamo\Dynamo.BL\bin\Debug\Dynamo.Model.dll
+C:\dev\Dynamo\Dynamo.BL\bin\Debug\Dynamo.Common.pdb
+C:\dev\Dynamo\Dynamo.BL\bin\Debug\Dynamo.Model.pdb
+C:\dev\Dynamo\Dynamo.BL\obj\Debug\Dynamo.BL.dll
+C:\dev\Dynamo\Dynamo.BL\obj\Debug\Dynamo.BL.pdb

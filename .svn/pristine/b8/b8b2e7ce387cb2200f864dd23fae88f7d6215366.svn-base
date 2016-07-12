@@ -1,0 +1,126 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Dynamo.BL.Base;
+using System.Linq.Expressions;
+using Dynamo.Model;
+using Dynamo.BL.BusinessRules.Band;
+using System.Transactions;
+
+namespace Dynamo.BL
+{
+    public class BandRepository: RepositoryBase<Model.Band>
+    {
+        public BandRepository()
+        { }
+
+        public BandRepository(DynamoContext context)
+            : base(context)
+        { }
+          
+        protected override void HandleComplexPropertyChanges(Model.Base.ModelBase entityBase)
+        {
+            var entity = entityBase as Model.Band;
+            if (entity == null)
+            {
+                return;
+            }
+            if (entity.Id == 0)
+            {
+                currentContext.Bands.Add(entity);
+            }
+            if (entity.BandTypeId == 1) //TODO
+            {
+                foreach (var contract in entity.Contracten)
+                {
+                    HandleChanges(contract);
+                }
+                foreach (var contactpersoon in entity.ContactPersonen)
+                {
+                    HandleChanges(contactpersoon);
+                }
+
+                HandleContractChanges(entity);
+            }
+        }
+
+        private void HandleContractChanges(Model.Band entity)
+        {
+            if(HasPropertyChanged(entity, "Naam"))
+            {
+                new HandleNaamChanged(currentContext).Execute(entity);
+            }
+            //if (HasPropertyChanged(entity.Contracten.LastOrDefault(), "EindeContract"))
+            //{
+                new BijwerkenPlanningEindDatumContract(currentContext).Execute(entity);
+            //}
+
+            try
+            {
+                AdminModus = true;
+                new BijwerkenPlanningContract(currentContext).Execute(entity);
+                new BijwerkenBetalingenContract(currentContext).Execute(entity);
+            }
+            finally
+            {
+                AdminModus = false;
+            }
+        }
+
+        public override List<Model.Band> Load(Expression<Func<Model.Band, bool>> expression)
+        {
+            //Expression<Func<Model.Band, bool>> exp = x => x.Verwijderd == false;
+            //Expression<Func<Model.Band, bool>> realExpression = Expression.Lambda<Func<Model.Band, bool>>(Expression.AndAlso(expression, exp));
+
+            return currentContext.Bands.Include("Contactpersonen").Include("Contracten").Where(expression).ToList();
+        }
+
+        public override void Save(Band entity)
+        {
+            if (entity.Id == 0)
+            {
+                currentContext.Bands.Add(entity);
+            }
+            base.Save(entity);
+        }
+
+        public override Band Load(int Id)
+        {
+            return currentContext.Bands.FirstOrDefault(x => x.Id == Id);
+        }
+        public override List<Model.Band> Load()
+        {
+            return currentContext.Bands.Where(x=> x.Verwijderd == false).ToList();
+        }
+
+        public override void Delete(Model.Band entity)
+        {
+            HandleContractChanges(entity);
+            base.Delete(entity);
+        }
+
+        #region Extra Methods
+        
+        public List<Boeking> GetBoekingen(Model.Band band)
+        {
+            return currentContext.Boekingen.Where(x => x.BandId == band.Id).ToList();
+        }
+
+        public void SaveBoeking(Model.Boeking boeking)
+        {
+            SaveChanges(boeking);
+        }
+
+        public void BijwerkenContracten()
+        {
+            var list = Load(x => x.BandTypeId == 1 && x.Verwijderd == false);
+            foreach (var band in list)
+            {
+                HandleContractChanges(band);
+            }
+        }
+
+        #endregion
+    }
+}

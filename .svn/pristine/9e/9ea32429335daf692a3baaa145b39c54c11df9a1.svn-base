@@ -1,0 +1,79 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Dynamo.BL.Base;
+using Dynamo.Model;
+using System.Linq.Expressions;
+
+namespace Dynamo.BL
+{
+    public class PlanningRepository : RepositoryBase<Model.Planning>
+    {
+        public PlanningRepository()
+        { }
+
+        public PlanningRepository(DynamoContext context)
+            : base(context)
+        { }
+
+        protected override void HandleComplexPropertyChanges(Model.Base.ModelBase entityBase)
+        {
+            var entity = entityBase as Model.Planning;
+            if (entity == null)
+            {
+                return;
+            }
+            var planningsDag = currentContext.PlanningsDagen.FirstOrDefault(x => x.Datum == entity.Datum);
+            var planning = currentContext.Planning.FirstOrDefault(x => x.Id == entity.Id);
+
+            if (planningsDag == null)
+            {
+                planningsDag = new PlanningsDag
+                {
+                    Datum = entity.Datum,
+                    Planningen = new List<Planning> { entity }
+                };
+                HandleChanges(planningsDag);
+                currentContext.PlanningsDagen.Add(planningsDag);
+            }
+            else if (entity.Id == 0)
+            {
+                planningsDag.Planningen.Add(entity);
+            }
+             
+            if (planning != null && entity.Boekingen.Any(b => b.Id == 0))
+            {
+                planning.Boekingen.Add(entity.Boekingen.First(b => b.Id == 0));
+            }
+
+            foreach (var boeking in entity.Boekingen)
+            {
+                //using (var repoBand = new BandRepository(currentContext))
+                //{
+                //    repoBand.HandleChanges(boeking.Band);
+                //}
+                HandleChanges(boeking);
+                if (boeking.Band !=null && boeking.Band.Id == 0)
+                {
+                    HandleChanges(boeking.Band);
+                }
+            }
+        }
+
+        public override List<Model.Planning> Load(Expression<Func<Model.Planning, bool>> expression)
+        {
+            return currentContext.Planning.Include("Boekingen").Include("Boekingen.Band").Include("Dagdeel").Include("Oefenruimte").Where(expression).ToList();
+        }
+
+        public List<Model.Band> GetBands()
+        {
+            return new BandRepository(currentContext).Load(x => x.Verwijderd == false).OrderBy(x => x.Naam).ToList();
+        }
+
+        public List<Model.Gesloten> LoadGesloten(DateTime dateTime)
+        {
+            return new GeslotenRepository(currentContext).Load(x => x.Verwijderd == false && x.DatumVan <= dateTime && (x.DatumTot.HasValue == false || x.DatumTot.Value >= dateTime));
+        }
+    }
+}

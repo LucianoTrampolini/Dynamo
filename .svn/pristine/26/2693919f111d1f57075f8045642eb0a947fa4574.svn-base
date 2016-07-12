@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Dynamo.ViewModel.Base;
+
+namespace Dynamo.ViewModel.Beheerder
+{
+    /// <summary>
+    /// Het beheerder viewmodel
+    /// </summary>
+    public class EditBeheerderViewModel : WorkspaceViewModel
+    {
+        public string Naam { get; set; }
+        public string Telefoon { get; set; }
+        public string Mobiel { get; set; }
+
+        public EditBeheerderViewModel()
+        {
+            
+        }
+    }
+}

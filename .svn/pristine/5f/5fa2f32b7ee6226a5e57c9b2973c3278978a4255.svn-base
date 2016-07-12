@@ -1,0 +1,17 @@
+﻿using Dynamo.Model;
+
+namespace Dynamo.BL.Base
+{
+    public static class DataBaseContext
+    {
+        private static DynamoContext _currentContext;
+        public static DynamoContext GetContext()
+        {
+            if (_currentContext == null)
+            {
+                _currentContext = new DynamoContext();
+            }
+            return _currentContext;
+        }
+    }
+}

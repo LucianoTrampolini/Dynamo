@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Dynamo.BL.Validation
+{
+    public class ValidationResult
+    {
+        public ValidationResultEnum Result = ValidationResultEnum.Ok;
+        public List<ValidationError> Errors = new List<ValidationError>();
+    }
+}

@@ -1,0 +1,9 @@
+﻿<UserControl x:Class="Dynamo.Boekingssysteem.Controls.AutoCompleteComboBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Panel.ZIndex="10">
+    <Canvas>
+        <TextBox x:Name="autoTextBox" MinWidth="100" Margin="0,0,10,0" TextWrapping="NoWrap"/>
+        <ListBox x:Name="suggestionListBox" MinWidth="100" Margin="0,25,0,-25" Visibility="Collapsed"/>
+    </Canvas>
+</UserControl>

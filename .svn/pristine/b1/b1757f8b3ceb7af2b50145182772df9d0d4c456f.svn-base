@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<repositories>
+  <repository path="..\Dynamo.BL\packages.config" />
+  <repository path="..\Dynamo.Boekingssysteem\packages.config" />
+  <repository path="..\Dynamo.Common\packages.config" />
+  <repository path="..\Dynamo.Converter\packages.config" />
+  <repository path="..\Dynamo.Model\packages.config" />
+  <repository path="..\Dynamo.Notifier\packages.config" />
+  <repository path="..\Dynamo.Poc\packages.config" />
+  <repository path="..\Dynamo.Test\packages.config" />
+  <repository path="..\Dynamo.Web\packages.config" />
+</repositories>

@@ -1,0 +1,7 @@
+C:\dev\Dynamo\Dynamo.Common\bin\Debug\Dynamo.Common.dll
+C:\dev\Dynamo\Dynamo.Common\bin\Debug\Dynamo.Common.pdb
+C:\dev\Dynamo\Dynamo.Common\obj\Debug\Dynamo.Common.csprojResolveAssemblyReference.cache
+C:\dev\Dynamo\Dynamo.Common\obj\Debug\Dynamo.Common.Properties.StringResources.resources
+C:\dev\Dynamo\Dynamo.Common\obj\Debug\Dynamo.Common.csproj.GenerateResource.Cache
+C:\dev\Dynamo\Dynamo.Common\obj\Debug\Dynamo.Common.dll
+C:\dev\Dynamo\Dynamo.Common\obj\Debug\Dynamo.Common.pdb

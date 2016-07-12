@@ -1,0 +1,424 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows.Data;
+using Dynamo.BoekingsSysteem.Base;
+using Dynamo.Boekingssysteem.ViewModel.Beheerder;
+using Dynamo.Common.Properties;
+using Dynamo.BL;
+using Dynamo.Boekingssysteem.ViewModel.Band;
+using Dynamo.Boekingssysteem.ViewModel.Planning;
+using System.Windows;
+using System.Windows.Media;
+using Dynamo.Boekingssysteem.ViewModel.ChangeLog;
+using Dynamo.Boekingssysteem;
+using Dynamo.Boekingssysteem.ViewModel.Bericht;
+
+namespace Dynamo.BoekingsSysteem.ViewModel
+{
+    public class HoofdSchermViewModel : WorkspaceViewModel
+    {
+        
+        private ObservableCollection<WorkspaceViewModel> _workspaces;
+        private string _beheerder = "";
+
+        public string HuidigeBeheerder
+        {
+            get 
+            { 
+                var beheerder = Helper.CurrentBeheerder; 
+                if(beheerder==null)
+                {
+                    return string.Empty;
+                }
+
+                if (_beheerder != beheerder.Naam && _beheerder != "")
+                {
+                    Helper.SetColors();
+                    OpenLogboek(DateTime.Today,true);
+                }
+                _beheerder = beheerder.Naam;
+                return beheerder.Naam;
+            }
+        }
+
+        public HoofdSchermViewModel()
+        {
+            Helper.CurrentBeheerder = new BeheerderRepository().CurrentBeheerder;
+            Helper.SetColors();
+            BackgroundWorker bg = new BackgroundWorker();
+            bg.DoWork+=new DoWorkEventHandler(bg_DoWork);
+            bg.RunWorkerAsync();
+            OpenPlanning();
+        }
+
+        void bg_DoWork(object sender, DoWorkEventArgs e)
+        {
+            using (var repo = new BandRepository())
+            {
+                repo.BijwerkenContracten();
+            }
+            using (var repo = new GeslotenRepository())
+            {
+                repo.BijwerkenGeslotenDagenPlanning();
+            }
+        }
+
+        #region Commands
+
+        protected override List<CommandViewModel> CreateCommands()
+        {
+            return new List<CommandViewModel>
+            {
+                new CommandViewModel(
+                    StringResources.ButtonPlanning,
+                    new RelayCommand(param => this.OpenPlanning())),
+                new CommandViewModel(
+                    StringResources.ButtonBands,
+                    new RelayCommand(param => this.OpenBands())),
+                new CommandViewModel(
+                    StringResources.ButtonIncidenteleBands,
+                    new RelayCommand(param => this.OpenIncidenteleBands())),
+                new CommandViewModel(
+                    StringResources.ButtonBeheerders,
+                    new RelayCommand(param => this.OpenBeheerders())),
+                new CommandViewModel(
+                    StringResources.ButtonMemos,
+                    new RelayCommand(param => this.OpenMemos())),
+                new CommandViewModel(
+                    StringResources.ButtonChangeLog,
+                    new RelayCommand(param => this.OpenChangeLog())),
+                new CommandViewModel(
+                    StringResources.ButtonGeslotenDagen,
+                    new RelayCommand(param => this.OpenGeslotenDagen())),
+                new CommandViewModel(
+                    StringResources.ButtonInstellingen,
+                    new RelayCommand(param => this.OpenInstellingen())),
+                new CommandViewModel(
+                    StringResources.ButtonWeekOverzicht,
+                    new RelayCommand(param => this.OpenWeekOverzicht(false))),
+                new CommandViewModel(
+                    StringResources.ButtonSluiten,
+                    CloseCommand)
+            };
+        }
+
+        public System.Windows.Input.ICommand OpenBeheerdersCommand
+        {
+            get
+            {
+                return new RelayCommand(param => this.OpenBeheerders());
+            }
+        }
+               
+ 
+        #endregion // Commands
+
+        #region Workspaces
+
+        /// <summary>
+        /// Returns the collection of available workspaces to display.
+        /// A 'workspace' is a ViewModel that can request to be closed.
+        /// </summary>
+        public ObservableCollection<WorkspaceViewModel> Workspaces
+        {
+            get
+            {
+                if (_workspaces == null)
+                {
+                    _workspaces = new ObservableCollection<WorkspaceViewModel>();
+                    _workspaces.CollectionChanged += this.OnWorkspacesChanged;
+                }
+                return _workspaces;
+            }
+        }
+
+        void OnWorkspacesChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null && e.NewItems.Count != 0)
+                foreach (WorkspaceViewModel workspace in e.NewItems)
+                    workspace.RequestClose += this.OnWorkspaceRequestClose;
+
+            if (e.OldItems != null && e.OldItems.Count != 0)
+                foreach (WorkspaceViewModel workspace in e.OldItems)
+                    workspace.RequestClose -= this.OnWorkspaceRequestClose;
+        }
+
+        void OnWorkspaceRequestClose(object sender, EventArgs e)
+        {
+            WorkspaceViewModel workspace = sender as WorkspaceViewModel;
+            if (sender is LogboekWeekOverzichtViewModel)
+            {
+                //Als het planningoverzicht geladen is dan altijd na het sluiten van een tab daar naar toe gaan...
+                LogboekViewModel workspace2 =
+                this.Workspaces.FirstOrDefault(vm => vm is LogboekViewModel)
+                as LogboekViewModel;
+
+                if (workspace2 != null)
+                {
+                    this.SetActiveWorkspace(workspace2);
+                    workspace.Dispose();
+                    this.Workspaces.Remove(workspace);
+                    return;
+                }
+            }
+            workspace.Dispose();
+            this.Workspaces.Remove(workspace);
+
+            if (_beheerder != HuidigeBeheerder)
+            {
+                //Beheerder is gewijzigd, dus het opstartscherm tonen
+                //TODO
+                OnPropertyChanged("HuidigeBeheerder");
+            }
+            else
+            { 
+
+
+                //Als het planningoverzicht geladen is dan altijd na het sluiten van een tab daar naar toe gaan...
+                PlanningOverichtViewModel workspace2 =
+                this.Workspaces.FirstOrDefault(vm => vm is PlanningOverichtViewModel)
+                as PlanningOverichtViewModel;
+
+                if (workspace2 != null)
+                {
+                    this.SetActiveWorkspace(workspace2);
+                }
+            }
+        }
+
+        #endregion // Workspaces
+
+        #region Private Helpers
+
+        private void OpenGeslotenDagen()
+        {
+            GeslotenOverzichtViewModel workspace =
+               this.Workspaces.FirstOrDefault(vm => vm is GeslotenOverzichtViewModel)
+               as GeslotenOverzichtViewModel;
+
+            if (workspace == null)
+            {
+                workspace = new GeslotenOverzichtViewModel();
+                this.Workspaces.Add(workspace);
+            }
+
+            this.SetActiveWorkspace(workspace);
+        }
+
+        private void OpenInstellingen()
+        {
+            InstellingenViewModel workspace =
+               this.Workspaces.FirstOrDefault(vm => vm is InstellingenViewModel)
+               as InstellingenViewModel;
+
+            if (workspace == null)
+            {
+                workspace = new InstellingenViewModel();
+                this.Workspaces.Add(workspace);
+            }
+
+            this.SetActiveWorkspace(workspace);
+        }
+
+        private void OpenWeekOverzicht(bool dezeWeek)
+        {
+            LogboekWeekOverzichtViewModel workspace =
+               this.Workspaces.FirstOrDefault(vm => vm is LogboekWeekOverzichtViewModel)
+               as LogboekWeekOverzichtViewModel;
+
+            if (workspace == null)
+            {
+                workspace = new LogboekWeekOverzichtViewModel();
+                workspace.OnShowLogboek += new EventHandler<ShowLogboekEventArgs>(workspace_OnShowLogboek);
+                this.Workspaces.Add(workspace);
+            }
+            else if (dezeWeek)
+            {
+                workspace.HuidigeDatum = DateTime.Today;
+            }
+
+            this.SetActiveWorkspace(workspace);
+        }
+
+        private void OpenLogboek()
+        {
+            PlanningOverichtViewModel planning =
+                this.Workspaces.FirstOrDefault(vm => vm is PlanningOverichtViewModel)
+                as PlanningOverichtViewModel;
+
+            LogboekViewModel workspace =
+                this.Workspaces.FirstOrDefault(vm => vm is LogboekViewModel)
+                as LogboekViewModel;
+
+            if (workspace == null)
+            {
+                workspace = new LogboekViewModel(planning == null ? DateTime.Today : planning.HuidigeDatum);
+                this.Workspaces.Add(workspace);
+            }
+            else
+            {
+                workspace.HuidigeDatum = planning == null ? DateTime.Today : planning.HuidigeDatum;
+            }
+
+            this.SetActiveWorkspace(workspace);
+            
+        }
+
+        private void OpenBeheerders()
+        {
+            BeheerderOverzichtViewModel workspace =
+                this.Workspaces.FirstOrDefault(vm => vm is BeheerderOverzichtViewModel)
+                as BeheerderOverzichtViewModel;
+
+            if (workspace == null)
+            {
+                workspace = new BeheerderOverzichtViewModel();
+                this.Workspaces.Add(workspace);
+            }
+            
+            this.SetActiveWorkspace(workspace);
+        }
+
+        private void OpenMemos()
+        {
+            MemoOverzichtViewModel workspace =
+                this.Workspaces.FirstOrDefault(vm => vm is MemoOverzichtViewModel)
+                as MemoOverzichtViewModel;
+
+            if (workspace == null)
+            {
+                workspace = new MemoOverzichtViewModel();
+                this.Workspaces.Add(workspace);
+            }
+
+            this.SetActiveWorkspace(workspace);
+        }
+
+        private void OpenChangeLog()
+        {
+            ChangeLogOverzichtViewModel workspace =
+                this.Workspaces.FirstOrDefault(vm => vm is ChangeLogOverzichtViewModel)
+                as ChangeLogOverzichtViewModel;
+
+            if (workspace == null)
+            {
+                workspace = new ChangeLogOverzichtViewModel();
+                this.Workspaces.Add(workspace);
+            }
+
+            this.SetActiveWorkspace(workspace);
+        }
+
+        private void OpenPlanning()
+        {
+            PlanningOverichtViewModel workspace =
+                this.Workspaces.FirstOrDefault(vm => vm is PlanningOverichtViewModel)
+                as PlanningOverichtViewModel;
+
+            if (workspace == null)
+            {
+                workspace = new PlanningOverichtViewModel();
+                workspace.OnShowLogboek += new EventHandler<ShowLogboekEventArgs>(workspace_OnShowLogboek);
+                this.Workspaces.Add(workspace);
+            }
+
+            this.SetActiveWorkspace(workspace);
+        }
+
+        void workspace_OnShowLogboek(object sender, ShowLogboekEventArgs e)
+        {
+            OpenLogboek(e.Datum,false);
+        }
+
+        private void OpenLogboek(DateTime datum, bool InitieelInloggen )
+        {
+            LogboekViewModel workspace =
+                    this.Workspaces.FirstOrDefault(vm => vm is LogboekViewModel)
+                    as LogboekViewModel;
+
+            if (workspace == null)
+            {
+                workspace = new LogboekViewModel(datum);
+                this.Workspaces.Add(workspace);
+            }
+            else
+            {
+                workspace.HuidigeDatum = datum;
+            }
+
+            this.SetActiveWorkspace(workspace);
+
+            if (InitieelInloggen)
+            {
+                OpenWeekOverzicht(true);
+            }
+        }
+
+        private void OpenBands()
+        {
+            BandOverzichtViewModel workspace =
+                this.Workspaces.FirstOrDefault(vm => vm is BandOverzichtViewModel)
+                as BandOverzichtViewModel;
+
+            if (workspace == null)
+            {
+                workspace = new BandOverzichtViewModel();
+                this.Workspaces.Add(workspace);
+            }
+
+            this.SetActiveWorkspace(workspace);
+        }
+
+        public void HomeCommand()
+        {
+            PlanningOverichtViewModel workspace =
+                this.Workspaces.FirstOrDefault(vm => vm is PlanningOverichtViewModel)
+                as PlanningOverichtViewModel;
+
+            if (workspace == null)
+            {
+                workspace = new PlanningOverichtViewModel();
+                this.Workspaces.Add(workspace);
+            }
+            else
+            {
+                workspace.DezeWeek.Command.Execute(null);
+            }
+
+            this.SetActiveWorkspace(workspace);
+        }
+
+        private void OpenIncidenteleBands()
+        {
+            IncidenteleBandOverzichtViewModel workspace =
+                this.Workspaces.FirstOrDefault(vm => vm is IncidenteleBandOverzichtViewModel)
+                as IncidenteleBandOverzichtViewModel;
+
+            if (workspace == null)
+            {
+                workspace = new IncidenteleBandOverzichtViewModel();
+                this.Workspaces.Add(workspace);
+            }
+
+            this.SetActiveWorkspace(workspace);
+        }
+
+        private void SetActiveWorkspace(WorkspaceViewModel workspace)
+        {
+            Debug.Assert(this.Workspaces.Contains(workspace));
+
+            ICollectionView collectionView = CollectionViewSource.GetDefaultView(this.Workspaces);
+            if (collectionView != null)
+                collectionView.MoveCurrentTo(workspace);
+
+            
+        }
+
+        #endregion // Private Helpers
+    }
+}

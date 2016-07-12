@@ -1,0 +1,398 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using Dynamo.Common;
+using Dynamo.Model.Base;
+using System.ComponentModel.DataAnnotations;
+
+namespace Dynamo.Model
+{
+    public class OpgetredenFout : ModelBase
+    {
+        public override string GetKorteOmschrijving()
+        {
+            return string.Format("Methode = {0}, Foutmelding = {1}", Methode, FoutMelding);
+        }
+        public string Methode { get; set; }
+        public string Entiteit { get; set; }
+        public string FoutMelding { get; set; }
+    }
+
+    public class Beheerder : ModelBase
+    {
+        public override string GetKorteOmschrijving()
+        {
+            return string.Format("Naam = {0}",Naam);
+        }
+
+        public Beheerder()
+        {
+            Vergoedingen = new List<Vergoeding>();
+            Berichten = new List<Bericht>();
+        }
+
+        [MaxLength(30)]
+        public string Naam { get; set; }
+        [MaxLength(50)]
+        public string Adres { get; set; }
+        [MaxLength(50)]
+        public string Plaats { get; set; }
+        [MaxLength(15)]
+        public string Telefoon { get; set; }
+        [MaxLength(15)]
+        public string Mobiel { get; set; }
+        [MaxLength(50)]
+        public string Email { get; set; }
+        public virtual ICollection<Vergoeding> Vergoedingen { get; set; }
+        public virtual ICollection<Bericht> Berichten { get; set; }
+
+        public int KleurAchtergrond { get; set; }
+        public int KleurTekst { get; set; }
+        public int KleurAchtergrondVelden { get; set; }
+        public int KleurTekstVelden { get; set; }
+        public int KleurSelecteren { get; set; }
+        public int KleurKnoppen { get; set; }
+        public int KleurTekstKnoppen { get; set; }
+
+        public bool IsAdministrator { get; set; }
+    }
+
+    public class Band : ModelBase
+    {
+        public override string GetKorteOmschrijving()
+        {
+            return string.Format("Naam = {0}", Naam);
+        }
+            
+        public Band()
+        { 
+            ContactPersonen=new List<ContactPersoon>();
+            Contracten = new List<Contract>();
+            Betalingen = new List<Betaling>();
+        }
+
+        [MaxLength(50)]
+        public string Naam { get; set; }
+        public virtual BandType BandType { get; set; }
+        public int BandTypeId { get; set; }
+        public virtual ICollection<Contract> Contracten { get; set; }
+        public virtual ICollection<Betaling> Betalingen { get; set; }
+        public int Kasten { get; set; }
+        public string Opmerkingen { get; set; }
+        public virtual ICollection<ContactPersoon> ContactPersonen { get; set; }
+
+        //Voor incidentele bands
+        [MaxLength(15)]
+        public string Telefoon { get; set; }
+        [MaxLength(20)]
+        public string BSNNummer { get; set; }
+        public bool HeeftVerleden { get; set; }
+    }
+
+    public class Contract : ModelBase
+    {
+        public override string GetKorteOmschrijving()
+        {
+            return string.Format("Bandnaam = {0}", Band.Naam); ;
+        }
+
+        public virtual Band Band { get; set; }
+        public int BandId { get; set; }
+        public DateTime BeginContract { get; set; }
+        public DateTime? EindeContract { get; set; }
+        public decimal MaandHuur { get; set; }
+        public decimal Borg { get; set; }
+        public virtual Dagdeel Dagdeel { get; set; }
+        public int DagdeelId { get; set; }
+        public virtual Oefenruimte Oefenruimte { get; set; }
+        public int OefenruimteId { get; set; }
+        public bool Crash { get; set; }
+        public int Backline { get; set; }
+        public int ExtraVersterkers { get; set; }
+        public int Microfoons { get; set; }
+        public int Oefendag { get; set; }
+    }
+
+    public class ContactPersoon : ModelBase
+    {
+        public override string GetKorteOmschrijving()
+        {
+            return string.Format("Band = {0}, Naam = {1}", Band.Naam, Naam);
+        }
+    
+        public virtual Band Band { get; set; }
+        public int BandId { get; set; }
+        [MaxLength(50)]
+        public string Naam { get; set; }
+        [MaxLength(50)]
+        public string Adres { get; set; }
+        [MaxLength(50)]
+        public string Plaats { get; set; }
+        [MaxLength(15)]
+        public string Telefoon { get; set; }
+        [MaxLength(50)]
+        public string Email { get; set; }
+    }
+
+    public class Tarief:ModelBase
+    {
+        public decimal Bedrag { get; set; }
+        public DateTime DatumVan { get; set; }
+        public DateTime? DatumTot { get; set; }
+    }
+
+    public class Oefenruimte:ModelBase
+    {
+        public Oefenruimte()
+        {
+            Tarieven = new List<Tarief>();
+        }
+
+        [MaxLength(50)]
+        public string Naam { get; set; }
+        public virtual ICollection<Tarief> Tarieven { get; set; }
+    }
+
+    public class PlanningsDag : ModelBase
+    {
+        public override string GetKorteOmschrijving()
+        {
+            return string.Format("Datum = {0}", Datum.GetDynamoDatum());
+        }
+
+        public PlanningsDag()
+        {
+            Planningen = new List<Planning>();
+        }
+
+        public DateTime Datum { get; set; }
+        public virtual ICollection<Planning> Planningen { get; set; }
+
+        public string DagOpmerking { get; set; }
+        [MaxLength(256)]
+        public string MiddagOpmerking { get; set; }
+        [MaxLength(256)]
+        public string AvondOpmerking { get; set; }
+    }
+
+    public class Planning : ModelBase
+    {
+        public override string GetKorteOmschrijving()
+        {
+            return string.Format("Datum = {0}, Dagdeel = {1}, {2}", Datum.GetDynamoDatum(), Dagdeel.Omschrijving, Oefenruimte.Naam);
+        }
+
+        public Planning()
+        {
+            Boekingen = new List<Boeking>();
+        }
+        public virtual PlanningsDag PlanningsDag { get; set; }
+        public int PlanningsDagId { get; set; }
+        public DateTime Datum { get; set; }
+        public virtual Dagdeel Dagdeel { get; set; }
+        public int DagdeelId { get; set; }
+        public virtual Oefenruimte Oefenruimte { get; set; }
+        public int OefenruimteId { get; set; }
+        public virtual ICollection<Boeking> Boekingen { get; set; }
+        public bool Beschikbaar { get; set; }
+        public virtual Gesloten Gesloten { get; set; }
+        public int? GeslotenId { get; set; }
+        
+    }
+
+    public class Boeking : ModelBase
+    {
+        public override string GetKorteOmschrijving()
+        {
+            return string.Format("BandNaam = {0}, Opmerking = {1}", BandNaam, Opmerking);
+        }
+        //public virtual Planning Planning { get; set; }
+        //public int PlanningId { get; set; }
+        public virtual Band Band { get; set; }
+        public int? BandId { get; set; }
+        [MaxLength(50)]
+        public string BandNaam { get; set; }
+        public string Opmerking { get; set; }
+        public DateTime DatumGeboekt { get; set; }
+        public DateTime? DatumAfgezegd { get; set; }
+    }
+
+    public class BandType : StamgegevenBase
+    { }
+    public class Dagdeel : StamgegevenBase
+    { }
+    public class Taak : StamgegevenBase
+    { }
+    public class BerichtType : StamgegevenBase
+    { }
+    public class Betaling : ModelBase
+    {
+        public override string GetKorteOmschrijving()
+        {
+            return string.Format("BandId = {0}, Bedrag = {1}, Opmerking = {2}", BandId, Bedrag, Opmerking);
+        }
+        public virtual Band Band { get; set; }
+        public int? BandId { get; set; }
+        public DateTime Datum { get; set; }
+        public decimal Bedrag { get; set; }
+        public string Opmerking { get; set; }
+    }
+
+    public class Vergoeding : ModelBase
+    {
+        public override string GetKorteOmschrijving()
+        {
+            return string.Format("Beheerder = {0}, Taak = {1}",Beheerder.Naam, Taak.Omschrijving);
+        }
+
+        public DateTime Datum { get; set; }
+        public decimal Bedrag { get; set; }
+        public virtual Dagdeel Dagdeel { get; set; }
+        public int DagdeelId { get; set; }
+        public virtual Taak Taak { get; set; }
+        public int TaakId { get; set; }
+
+        public virtual Beheerder Beheerder { get; set; }
+        public int BeheerderId { get; set; }
+    }
+
+    public class Gesloten : ModelBase
+    {
+        public override string GetKorteOmschrijving()
+        {
+            return string.Format("DatumVan = {0}, DatumTot = {1}", DatumVan, DatumTot.HasValue ? DatumTot.Value.GetDynamoDatum() : string.Empty);
+        }
+
+        [MaxLength(50)]
+        public string Reden { get; set; }
+        public DateTime DatumVan { get; set; }
+        public DateTime? DatumTot { get; set; }
+        public bool Oefenruimte1 { get; set; }
+        public bool Oefenruimte2 { get; set; }
+        public bool Oefenruimte3 { get; set; }
+        public bool Middag { get; set; }
+        public bool Avond { get; set; }
+        public bool Maandag { get; set; }
+        public bool Dinsdag { get; set; }
+        public bool Woensdag { get; set; }
+        public bool Donderdag { get; set; }
+        public bool Vrijdag { get; set; }
+        public bool Zaterdag { get; set; }
+        public bool Zondag { get; set; }
+    }
+
+    public class Bericht : ModelBase 
+    {
+        public override string GetKorteOmschrijving()
+        {
+            return string.Format("Titel = {0}, BerichtType = {1}", Titel, BerichtType.Omschrijving);
+        }
+
+        public Bericht()
+        {
+            Beheerders = new List<Beheerder>();
+        }
+
+        public virtual ICollection<Beheerder> Beheerders { get; set; }
+        public DateTime Datum { get; set; }
+        public virtual BerichtType BerichtType { get; set; }
+        public int BerichtTypeId { get; set; }
+        public string Titel { get; set; }
+        public string Tekst { get; set; }
+    }
+
+    public class ChangeLog : ModelBase
+    {
+        public DateTime Datum { get; set; }
+        [MaxLength(50)]
+        public string Entiteit { get; set; }
+        public string Omschrijving { get; set; }
+        [MaxLength(50)]
+        public string Eigenschap { get; set; }
+        public string OudeWaarde { get; set; }
+        public string NieuweWaarde { get; set; }
+    }
+
+    public class Instelling : ModelBase
+    {
+        public override string GetKorteOmschrijving()
+        {
+            return string.Format("Instellingen");
+        }
+        public int WekenIncidenteleBandsBewaren { get; set; }
+        public int WekenVooruitBoeken { get; set; }
+        public decimal VergoedingBeheerder { get; set; }
+        public decimal BedragBandWaarschuwing { get; set; }
+    }
+
+    public class DynamoContext : DbContext
+    {
+        public DbSet<OpgetredenFout> OpgetredenFouten { get; set; }
+        public DbSet<Beheerder> Beheerders { get; set; }
+        public DbSet<Band> Bands { get; set; }
+
+        public DbSet<ContactPersoon> ContactPersoons { get; set; }
+        public DbSet<BandType> BandTypes { get; set; }
+        public DbSet<PlanningsDag> PlanningsDagen { get; set; }
+        public DbSet<Planning> Planning { get; set; }
+        public DbSet<Boeking> Boekingen { get; set; }
+        public DbSet<Oefenruimte> Oefenruimtes { get; set; }
+        public DbSet<Tarief> Tarieven { get; set; }
+        public DbSet<Dagdeel> Dagdelen { get; set; }
+        public DbSet<Betaling> Betalingen { get; set; }
+        public DbSet<Vergoeding> Vergoedingen { get; set; }
+        public DbSet<Taak> Taken { get; set; }
+        public DbSet<Gesloten> Gesloten { get; set; }
+        public DbSet<Contract> Contracten { get; set; }
+        public DbSet<BerichtType> BerichtTypes { get; set; }
+        public DbSet<Bericht> Berichten { get; set; }
+        public DbSet<ChangeLog> ChangeLog { get; set; }
+        public DbSet<Instelling> Instellingen { get; set; }
+        
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            MapBase<OpgetredenFout>(modelBuilder);
+            MapBase<Beheerder>(modelBuilder);
+            MapBase<Band>(modelBuilder);
+            MapBase<Contract>(modelBuilder);
+            MapBase<ContactPersoon>(modelBuilder);
+            MapBase<BandType>(modelBuilder);
+            MapBase<PlanningsDag>(modelBuilder);
+            MapBase<Planning>(modelBuilder);
+            MapBase<Boeking>(modelBuilder);
+            modelBuilder.Entity<Boeking>().HasOptional(x => x.Band).WithMany().HasForeignKey(x=>x.BandId);
+            
+            MapBase<Oefenruimte>(modelBuilder);
+            MapBase<Tarief>(modelBuilder);
+            MapBase<Dagdeel>(modelBuilder);
+            MapBase<Betaling>(modelBuilder);
+            MapBase<Vergoeding>(modelBuilder);
+            MapBase<Gesloten>(modelBuilder);
+            MapBase<BerichtType>(modelBuilder);
+            MapBase<Bericht>(modelBuilder);
+            modelBuilder.Entity<Bericht>().
+              HasMany(b => b.Beheerders).
+              WithMany(p => p.Berichten).
+              Map(
+               m =>
+               {
+                   m.MapLeftKey("BerichtId");
+                   m.MapRightKey("BeheerderId");
+                   m.ToTable("BeheerderBerichten");
+               });
+
+            MapBase<ChangeLog>(modelBuilder);
+            MapBase<Instelling>(modelBuilder);
+            
+            base.OnModelCreating(modelBuilder);
+        }
+
+        private void MapBase<T>(DbModelBuilder modelBuilder)  where T : ModelBase, new()
+        {
+            T t = new T();             
+            modelBuilder.Entity<T>().ToTable(t.GetType().Name);
+            modelBuilder.Entity<T>().HasOptional(x => x.GewijzigdDoor).WithMany().HasForeignKey(b => b.GewijzigdDoorId);
+            modelBuilder.Entity<T>().HasOptional(x => x.AangemaaktDoor).WithMany().HasForeignKey(b => b.AangemaaktDoorId);
+        }
+    }
+}

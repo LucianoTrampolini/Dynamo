@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Dynamo.Boekingssysteem.ViewModel.Base;
+
+namespace Dynamo.Boekingssysteem.ViewModel.Planning
+{
+    public class BoekingViewModel:EntityViewModel<Model.Boeking>
+    {
+        public string Opmerking
+        {
+            get { return _entity.Opmerking; }
+            set
+            {
+                if (value == _entity.Opmerking)
+                {
+                    return;
+                }
+                _entity.Opmerking = value;
+                OnPropertyChanged("Opmerking");
+            }
+        }
+        public string BandNaam
+        {
+            get { return _entity.BandNaam; }
+        }
+
+        public BoekingViewModel(Model.Boeking boeking) 
+            : base(boeking) 
+        { }
+    }
+}

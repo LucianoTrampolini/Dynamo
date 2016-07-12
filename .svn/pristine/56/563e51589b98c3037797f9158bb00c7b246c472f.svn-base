@@ -1,0 +1,57 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Media;
+using Dynamo.BL;
+
+namespace Dynamo.Boekingssysteem
+{
+    public static class Helper
+    {
+        const int RedShift = 0;
+        const int GreenShift = 8;
+        const int BlueShift = 16;
+
+        //TODO threadsafe maken...
+        public static Model.Beheerder CurrentBeheerder { get; set; }
+        
+        public static void SetColors()
+        {
+            
+            if (CurrentBeheerder != null)
+            {
+                //Application.Current.Resources["KleurAchtergrond"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(GetColorHexFromInt(CurrentBeheerder.KleurAchtergrond)));
+                //Application.Current.Resources["KleurAchtergrond"] = new SolidColorBrush(GetColorFromInt(CurrentBeheerder.KleurAchtergrond));
+                
+                Application.Current.Resources["KleurAchtergrond"] = new LinearGradientBrush(GetColorFromInt((CurrentBeheerder.KleurAchtergrond)), GetColorFromInt((CurrentBeheerder.KleurTekst)), new Point(0.5, 0.5), new Point(2, 2));
+                Application.Current.Resources["KleurTekst"] = new SolidColorBrush(GetColorFromInt((CurrentBeheerder.KleurTekst)));
+                //Application.Current.Resources["KleurAchtergrondVelden"] = new SolidColorBrush(GetColorFromInt((CurrentBeheerder.KleurAchtergrondVelden)));
+                Application.Current.Resources["KleurAchtergrondVelden"] = new LinearGradientBrush(GetColorFromInt((CurrentBeheerder.KleurAchtergrondVelden)), GetColorFromInt((CurrentBeheerder.KleurTekstVelden)), new Point(0.5, 1), new Point(3, 3));
+                Application.Current.Resources["KleurTekstVelden"] = new SolidColorBrush(GetColorFromInt((CurrentBeheerder.KleurTekstVelden)));
+                Application.Current.Resources["KleurKnoppen"] = new SolidColorBrush(GetColorFromInt((CurrentBeheerder.KleurKnoppen)));
+                Application.Current.Resources["KleurSpecialeKnoppen"] = new LinearGradientBrush(GetColorFromInt((CurrentBeheerder.KleurAchtergrondVelden)), GetColorFromInt(CurrentBeheerder.KleurTekstVelden), new Point(0.5, 0), new Point(2, 1));
+                Application.Current.Resources["KleurTekstKnoppen"] = new SolidColorBrush(GetColorFromInt((CurrentBeheerder.KleurTekstKnoppen)));
+                Application.Current.Resources["KleurSelecteren"] = new SolidColorBrush(GetColorFromInt((CurrentBeheerder.KleurSelecteren)));
+                Application.Current.Resources["Brush_HeaderBackground"] = new LinearGradientBrush(GetColorFromInt((CurrentBeheerder.KleurKnoppen)), GetColorFromInt(CurrentBeheerder.KleurTekstKnoppen), new Point(0.5, 0), new Point(0.5, 1));
+                
+                //Brush_HeaderBackground
+            }
+        }
+
+        public static Color GetColorFromInt(int oleColor)
+        {
+            return Color.FromRgb(
+                    (byte)((oleColor >> RedShift) & 0xFF),
+                    (byte)((oleColor >> GreenShift) & 0xFF),
+                    (byte)((oleColor >> BlueShift) & 0xFF)
+                    ); 
+        }
+
+        public static int ToOle(Color wpfColor)
+        {
+            return wpfColor.R << RedShift | wpfColor.G << GreenShift | wpfColor.B << BlueShift;
+        } 
+    }
+}

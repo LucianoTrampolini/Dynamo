@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Dynamo.ViewModel.Base;
+
+namespace Dynamo.ViewModel.Beheerder
+{
+    public class BeheerderOverzichtViewModel : WorkspaceViewModel
+    {
+
+    }
+}

@@ -1,0 +1,60 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Dynamo.BL.Base;
+using Dynamo.Model;
+using Dynamo.BL.Validation;
+using System.Linq.Expressions;
+
+namespace Dynamo.BL
+{
+    public class BeheerderRepository: RepositoryBase<Beheerder>
+    {
+        public BeheerderRepository()
+            : base(new DynamoContext())
+        { }
+
+        public BeheerderRepository(DynamoContext context)
+            : base(context)
+        { }
+
+        public Beheerder CurrentBeheerder
+        {
+            get
+            {
+                if (AdminBeheerder)
+                {
+                    return Load(1);
+                }
+                //Todo dit is niet goed
+                var vergoeding = currentContext.Vergoedingen.OrderByDescending(x => x.Id).FirstOrDefault(x => x.Taak.Omschrijving == "Beheer" && x.Verwijderd == false);
+                if (vergoeding == null)
+                {
+                    return null;
+                }
+
+                return vergoeding.Beheerder;
+
+            }
+        }
+
+        public bool AdminBeheerder { get; set; }
+        
+        public override Beheerder Load(int Id)
+        {
+            return currentContext.Beheerders.Where(x => x.Id == Id).FirstOrDefault();
+        }
+
+        public override List<Beheerder> Load()
+        {
+            //Bij het laden van de beheerders systeem met rust laten...
+            return currentContext.Beheerders.Where(x => x.Id>1 && x.Verwijderd==false).ToList();
+        }
+
+        public bool IsBeheerderIngelogdVoorDagDeel(int dagdeelId)
+        {
+            return currentContext.Vergoedingen.Any(v => v.Datum == DateTime.Today && v.Verwijderd==false && v.DagdeelId == dagdeelId && v.Taak.Omschrijving == "Beheer");
+        }
+    }
+}

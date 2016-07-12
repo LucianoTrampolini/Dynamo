@@ -1,0 +1,129 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Media;
+using Dynamo.BL;
+using System.Threading;
+using System.Timers;
+using Hardcodet.Wpf.TaskbarNotification;
+using Dynamo.Boekingssysteem.View;
+
+namespace Dynamo.Boekingssysteem
+{
+    public static class Helper
+    {
+        const int RedShift = 0;
+        const int GreenShift = 8;
+        const int BlueShift = 16;
+
+        private static bool _balloonShowing = false;
+        private static System.Timers.Timer _timer;
+        private static Queue<string> _messageQueue = new Queue<string>();
+        private static Queue<string> messageQueue
+        {
+            get
+            {
+                lock (_messageQueue)
+                {
+                    return _messageQueue;    
+                }
+            }
+        }
+
+        private static TaskbarIcon _taskbarIcon;
+        public static TaskbarIcon TaskbarIcon
+        {
+            get
+            {
+                return _taskbarIcon;
+            }
+            set
+            {
+                _taskbarIcon = value;
+               
+            }
+        }
+
+        private static void DoSomething(object sender, EventArgs e)
+        {
+            _balloonShowing = true;
+        }
+
+        private static void DoSomething2(object sender, BallonShowingEventArgs e)
+        {
+            _balloonShowing = false;
+        }
+
+        //TODO threadsafe maken...
+        public static Model.Beheerder CurrentBeheerder { get; set; }
+        
+        public static void SetColors()
+        {
+            if (CurrentBeheerder != null)
+            {
+                Application.Current.Resources["KleurAchtergrond"] = new LinearGradientBrush(GetColorFromInt((CurrentBeheerder.KleurAchtergrond)), GetColorFromInt((CurrentBeheerder.KleurTekst)), new Point(0.5, 0.5), new Point(2, 2));
+                Application.Current.Resources["KleurTekst"] = new SolidColorBrush(GetColorFromInt((CurrentBeheerder.KleurTekst)));
+                Application.Current.Resources["KleurAchtergrondVelden"] = new LinearGradientBrush(GetColorFromInt((CurrentBeheerder.KleurAchtergrondVelden)), GetColorFromInt((CurrentBeheerder.KleurTekstVelden)), new Point(0.5, 1), new Point(3, 3));
+                Application.Current.Resources["KleurTekstVelden"] = new SolidColorBrush(GetColorFromInt((CurrentBeheerder.KleurTekstVelden)));
+                Application.Current.Resources["KleurKnoppen"] = new SolidColorBrush(GetColorFromInt((CurrentBeheerder.KleurKnoppen)));
+                Application.Current.Resources["KleurSpecialeKnoppen"] = new LinearGradientBrush(GetColorFromInt((CurrentBeheerder.KleurAchtergrondVelden)), GetColorFromInt(CurrentBeheerder.KleurTekstVelden), new Point(0.5, 0), new Point(2, 1));
+                Application.Current.Resources["KleurTekstKnoppen"] = new SolidColorBrush(GetColorFromInt((CurrentBeheerder.KleurTekstKnoppen)));
+                Application.Current.Resources["KleurSelecteren"] = new SolidColorBrush(GetColorFromInt((CurrentBeheerder.KleurSelecteren)));
+                Application.Current.Resources["Brush_HeaderBackground"] = new LinearGradientBrush(GetColorFromInt((CurrentBeheerder.KleurKnoppen)), GetColorFromInt(CurrentBeheerder.KleurTekstKnoppen), new Point(0.5, 0), new Point(0.5, 1));
+            }
+        }
+
+        public static Color GetColorFromInt(int oleColor)
+        {
+            return Color.FromRgb(
+                    (byte)((oleColor >> RedShift) & 0xFF),
+                    (byte)((oleColor >> GreenShift) & 0xFF),
+                    (byte)((oleColor >> BlueShift) & 0xFF)
+                    ); 
+        }
+
+        public static int ToOle(Color wpfColor)
+        {
+            return wpfColor.R << RedShift | wpfColor.G << GreenShift | wpfColor.B << BlueShift;
+        }
+
+        public static void AddBalloonMessage(string message)
+        {
+            messageQueue.Enqueue(message);
+            if (_timer == null)
+            {
+                _timer = new System.Timers.Timer();
+                _timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
+                _timer.Interval = 1000;
+                _timer.Start();
+            }
+            _timer.Enabled = true;
+        }
+
+        private static DateTime _nextToolTip = DateTime.MinValue;
+
+        private static void _timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            if (TaskbarIcon!=null && messageQueue.Count > 0 && DateTime.Now> _nextToolTip)
+            {
+                TaskbarIcon.ShowBalloonTip("Waarschuwing!", messageQueue.Dequeue(), BalloonIcon.Warning);
+                _nextToolTip = DateTime.Now.AddSeconds(10);
+
+                
+            }
+            if (messageQueue.Count == 0)
+            {
+                _timer.Enabled = false;
+            }
+        }
+        private static void ShowBalloon()
+        {
+            //FancyBalloon balloon = new FancyBalloon();
+            //balloon.BalloonText = messageQueue.Dequeue();
+            //TaskbarIcon.ShowCustomBalloon(balloon, System.Windows.Controls.Primitives.PopupAnimation.Slide, null);
+            
+        }
+    }
+}

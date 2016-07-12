@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="Dynamo.Boekingssysteem.View.Bericht.MemoOverzicht"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             >
+    <UserControl.Resources>
+
+        <CollectionViewSource
+          x:Key="Memos" 
+          Source="{Binding Path=AlleBerichten}"
+          >
+        </CollectionViewSource>
+
+    </UserControl.Resources>
+
+    <Grid Margin="4">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Border 
+        Grid.Column="0" 
+        Width="Auto"
+        >
+            <Grid Margin="10,10,10,0" Height="Auto" Width="Auto" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+
+                <ListView 
+                 Grid.Row="0"
+                 DataContext="{StaticResource Memos}" 
+                 ItemContainerStyle="{StaticResource ListViewItemStyle}"
+                 ItemsSource="{Binding}"
+                 >
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn 
+                        Header="Datum" 
+                        DisplayMemberBinding="{Binding Path=Datum}" 
+                    />
+                            <GridViewColumn 
+                        Header="Omschrijving" 
+                        DisplayMemberBinding="{Binding Path=Titel}" 
+                    />
+                            <GridViewColumn 
+                        Header="Aangemaakt door" 
+                        DisplayMemberBinding="{Binding Path=AangemaaktDoor}" 
+                    />
+
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+
+
+                <ContentControl Grid.Row="1" 
+            Content="{Binding Path=Commands}"
+            ContentTemplate="{StaticResource CommandButtons}"
+            HorizontalAlignment="Stretch"
+        />
+
+
+            </Grid>
+        </Border>
+
+        <ContentControl 
+                Grid.Row="1" Grid.Column="1"
+                Content="{Binding CurrentViewModel}" 
+                VerticalContentAlignment="Top"
+                VerticalAlignment="Top"
+            />
+    </Grid>
+</UserControl>

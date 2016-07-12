@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Dynamo.BL.Base;
+using System.Data.Entity;
+
+namespace Dynamo.BL
+{
+    public class BerichtRepository : RepositoryBase<Model.Bericht>
+    {
+        public override List<Model.Bericht> Load(System.Linq.Expressions.Expression<Func<Model.Bericht, bool>> expression)
+        {
+            return currentContext.Berichten.Include("AangemaaktDoor").Include("BerichtType").Where(expression).ToList();
+        }
+    }
+}
